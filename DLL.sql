@@ -1,0 +1,68 @@
+CREATE DATABASE SpMedicalGroup;
+GO
+
+USE SpMedicalGroup;
+GO
+
+CREATE TABLE Especialidades(
+	IdEspecialidade INT PRIMARY KEY IDENTITY,
+	Nome VARCHAR(200),
+);
+GO
+
+CREATE TABLE TipoUsuarios(
+	IdTipoUsuario INT PRIMARY KEY IDENTITY,
+	Tipo VARCHAR(100),
+);
+GO
+
+CREATE TABLE Usuarios(
+	IdUsuario INT PRIMARY KEY IDENTITY,
+	Email VARCHAR (200) NOT NULL UNIQUE,
+	Senha VARCHAR(100) NOT NULL UNIQUE,
+	IdTipoUsuario INT FOREIGN KEY REFERENCES TipoUsuarios(IdTipoUsuario) 
+);
+GO
+
+CREATE TABLE Clinicas(
+	IdClinica INT PRIMARY KEY IDENTITY,
+	Nome VARCHAR(200)NOT NULL,
+	CNPJ CHAR(18) NOT NULL,
+	RazaoSocial VARCHAR(500) NOT NULL,
+	Endereco VARCHAR (500) NOT NULL
+);
+GO
+
+CREATE TABLE Medicos(
+	IdMedico INT PRIMARY KEY IDENTITY,
+	CRM CHAR(10) NOT NULL UNIQUE,
+	Nome VARCHAR(200) NOT NULL,
+	IdEspecialidade INT FOREIGN KEY REFERENCES Especialidades(IdEspecialidade),
+	IdClinica INT FOREIGN KEY REFERENCES Clinicas(IdClinica),
+	IdUsuario INT FOREIGN KEY REFERENCES Usuarios (IdUsuario)
+
+);
+GO
+
+CREATE TABLE Pacientes(
+	IdPacientes INT PRIMARY KEY IDENTITY,
+	Nome VARCHAR(500) NOT NULL,
+	DataNascimento DATE NOT NULL,
+	Telefone VARCHAR(30),
+	RG CHAR(20) NOT NULL,
+	CPF VARCHAR(20) NOT NULL UNIQUE,
+	Endereco VARCHAR(500) NOT NULL,
+	IdUsuario INT FOREIGN KEY REFERENCES Usuarios (IdUsuario)
+
+);
+GO
+
+CREATE TABLE Consultas(
+	IdConsulta INT PRIMARY KEY IDENTITY,
+	IdPaciente INT FOREIGN KEY REFERENCES Pacientes(IdPacientes),
+	IdMedico INT FOREIGN KEY REFERENCES Medicos(IdMedico),
+	DataConsulta DATETIME NOT NULL,
+	Situacao VARCHAR(200) NOT NULL,
+	Descricao VARCHAR(900)
+);
+GO
